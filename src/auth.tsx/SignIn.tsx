@@ -48,8 +48,8 @@ const OrSignUpBox = styled(Box)(({ theme }) => ({
 }))
 
 const SignIn = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('peter@gmail.com');
+  const [password, setPassword] = useState(123);
   const [user, setUser] = useState('');
   
   const navigate = useNavigate()
@@ -94,7 +94,7 @@ const SignIn = () => {
             label="Password"
             type="password"
             variant="outlined"
-            onChange={(e)=>setPassword(e.target.value)}
+            onChange={(e)=>setPassword(Number(e.target.value))}
             sx={{ marginBottom: 2, width: '100%' }}
           />
           <Button

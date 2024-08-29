@@ -44,8 +44,8 @@ const StyledTableCell = styled(TableCell)`
   background-color: #f0f0f0; /* Light gray background for header cells */
 `;
 
-const RoleInfo = ({ rolePermissions}) => {
-  
+const RoleInfo = ({ rolePermissions }) => {
+
   const [features, setFeatures] = useState([])
   const [permissions, setPermissions] = useState([]);
   const [roleInfo, setRoleInfo] = useState([]);
@@ -58,13 +58,9 @@ const RoleInfo = ({ rolePermissions}) => {
       const { data } = await axios.get(Url + 'getFeatures');
       if (roleId) {
         const { data: { RoleSpecfiedFeatures, roleName } } = await axios.get(Url + `getRoleInfo/${roleId}`)
-         
-        setRoleInfo({ roleSpecfiedFeatures:[...RoleSpecfiedFeatures], roleName })
-      }
-      
-       
 
-      
+        setRoleInfo({ roleSpecfiedFeatures: [...RoleSpecfiedFeatures], roleName })
+      }
       setFeatures(data?.features)
       setPermissions(data?.permissions)
     }
@@ -72,7 +68,7 @@ const RoleInfo = ({ rolePermissions}) => {
     fetchData()
 
   }, [featureId])
-  
+
 
   return (
     <>
@@ -82,8 +78,8 @@ const RoleInfo = ({ rolePermissions}) => {
         existingInfoForEdit={roleInfo}
         input={rolePermissions?.add || rolePermissions?.edit}
         savebutton={rolePermissions?.add || rolePermissions?.edit}
-        rolePermissions ={rolePermissions}
-        
+        rolePermissions={rolePermissions}
+
       />
     </>
   );

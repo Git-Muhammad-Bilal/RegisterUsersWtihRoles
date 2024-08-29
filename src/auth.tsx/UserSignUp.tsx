@@ -46,7 +46,7 @@ const OrSignInBox = styled(Box)(({ theme }) => ({
 }))
 
 
-const UserSignUp = ({userPermissions}) => {
+const UserSignUp = ({ userPermissions }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -56,126 +56,115 @@ const UserSignUp = ({userPermissions}) => {
   const navigate = useNavigate()
   const { subUserId } = useParams()
 
- 
-
   useEffect(() => {
     async function fetchRoles() {
       const { data } = await axios.get(`${Url}getRoles`)
       setRoles(data)
-      
-      
-      const { data:user } =subUserId && await axios.get(`${Url}getUserSignUpInfo/${subUserId}`)
-       
-       if (user) {
+      const { data: user } = subUserId && await axios.get(`${Url}getUserSignUpInfo/${subUserId}`)
+      if (user) {
         setUser(user)
-        let {roleName} = data?.find(({ _id }) => user?.role === _id)
+        let { roleName } = data?.find(({ _id }) => user?.role === _id)
         setName(user?.name)
         setEmail(user?.email)
         setRole(roleName)
         setPassword(user.password)
       }
-  }
-  
+    }
 
-   
-        fetchRoles()
-    
-   
+    fetchRoles()
   }, [subUserId])
 
- 
-
-
-
-    const handleNameChange = (event) => {
-      setName(event.target.value);
-    };
-    const handleEmailChange = (event) => {
-      setEmail(event.target.value);
-    };
-    const handlePasswordChange = (event) => {
-      setPassword(event.target.value);
-    };
-
-    const handleRoleChange = (event) => {
-      setRole(event.target.value);
-    };
-
-    const handleCreateUser = async () => {
-      // debugger
-      let { data } = await axios.post(`${Url}createUser`, {
-        name: name,
-        email: email,
-        role: role,
-        password: password
-      })
-
-
-      if (data) {
-        navigate('/admin/Users')
-      }
-    }
-   
-
-    return (
-      <>
-
-        <BackgroundContainer>
-          <FormContainer>
-            <HeadingContainer>
-              <h4>Create User</h4>
-            </HeadingContainer>
-            <TextField
-              value={name}
-              label="Username"
-              disabled={ subUserId && !userPermissions?.edit}
-              onChange={handleNameChange}
-              variant="outlined"
-              sx={{ marginBottom: 2, width: '100%' }}
-              />
-            <TextField
-              value={email}
-              onChange={handleEmailChange}
-              label="Email"
-              disabled={ subUserId && !userPermissions?.edi}
-              variant="outlined"
-              sx={{ marginBottom: 2, width: '100%' }}
-              />
-            <TextField
-              select
-              value={role}
-              onChange={handleRoleChange}
-              label="Role"
-              disabled={ subUserId && !userPermissions?.edi}
-              variant="outlined"
-              sx={{ marginBottom: 2, width: '100%' }}
-              >
-              {
-                roles?.map(({roleName, _id}) => (<MenuItem key={_id} value={roleName}>{roleName}</MenuItem>))
-              }
-            </TextField>
-            <TextField
-              value={password}
-              onChange={handlePasswordChange}
-              label="password"
-              disabled={ subUserId && !userPermissions?.edi }
-              type="password"
-              variant="outlined"
-              sx={{ marginBottom: 2, width: '100%' }}
-            />
-            <Button
-              variant="contained"
-              disabled={ subUserId && userPermissions?.edi}
-              color="primary"
-              sx={{ marginTop: 2, width: '100%' }}
-              onClick={() => handleCreateUser()}
-            >
-              Sign Up
-            </Button>
-          </FormContainer>
-        </BackgroundContainer>
-      </>
-    );
+  const handleNameChange = (event) => {
+    setName(event.target.value);
   };
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleRoleChange = (event) => {
+    setRole(event.target.value);
+  };
+
+  const handleCreateUser = async () => {
+    let roleId = roles.find(({ roleName }) => roleName === role);
+    let { data } = await axios.post(`${Url}createUser`, {
+      name: name,
+      email: email,
+      role: roleId?._id,
+      password: password,
+      _id: subUserId || null
+
+    })
+
+
+    if (data) {
+      navigate('/admin/Users')
+    }
+  }
+
+
+  return (
+    <>
+
+      <BackgroundContainer>
+        <FormContainer>
+          <HeadingContainer>
+            <h4>Create User</h4>
+          </HeadingContainer>
+          <TextField
+            value={name}
+            label="Username"
+            disabled={subUserId && !userPermissions?.edit}
+            onChange={handleNameChange}
+            variant="outlined"
+            sx={{ marginBottom: 2, width: '100%' }}
+          />
+          <TextField
+            value={email}
+            onChange={handleEmailChange}
+            label="Email"
+            disabled={subUserId && !userPermissions?.edit}
+            variant="outlined"
+            sx={{ marginBottom: 2, width: '100%' }}
+          />
+          <TextField
+            select
+            value={role}
+            onChange={handleRoleChange}
+            label="Role"
+            disabled={subUserId && !userPermissions?.edit}
+            variant="outlined"
+            sx={{ marginBottom: 2, width: '100%' }}
+          >
+            {
+              roles?.map(({ roleName, _id }) => (<MenuItem key={_id} value={roleName}>{roleName}</MenuItem>))
+            }
+          </TextField>
+          <TextField
+            value={password}
+            onChange={handlePasswordChange}
+            label="password"
+            disabled={subUserId && !userPermissions?.edit}
+            type="password"
+            variant="outlined"
+            sx={{ marginBottom: 2, width: '100%' }}
+          />
+          <Button
+            variant="contained"
+            disabled={subUserId && !userPermissions?.edit}
+            color="primary"
+            sx={{ marginTop: 2, width: '100%' }}
+            onClick={() => handleCreateUser()}
+          >
+            Sign Up
+          </Button>
+        </FormContainer>
+      </BackgroundContainer>
+    </>
+  );
+};
 
 export default UserSignUp;

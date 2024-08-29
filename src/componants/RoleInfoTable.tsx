@@ -96,7 +96,7 @@ const RoleInfoTable = ({features, permissions, existingInfoForEdit ,input, saveb
                      
         <StyledTableCell key={index}>
            { (index+1 === 7 ) ? 
-           <Button disabled ={isEditORAdd} onClick={handleSaveFeatures} variant='contained'>save</Button>
+           <Button disabled ={!roleName || isEditORAdd} onClick={handleSaveFeatures} variant='contained'>save</Button>
            :name
            } 
        </StyledTableCell>
@@ -143,11 +143,13 @@ const RoleInfoTable = ({features, permissions, existingInfoForEdit ,input, saveb
    
     
   <StyledTableContainer>
-    {roleName && rolePermissions.add ? <>
-         <Button variant='contained' onClick={() => setRoleName('')}>edit</Button>
+    
+    
+    
+         <Button variant='contained' onClick={() => setRoleName(val || existingInfoForEdit?.roleName)}>save name</Button>
            <h2>{roleName}</h2>
-         </> :
-         input && <TextField
+         
+       {  input && <TextField
             onChange={(e) => { setVal(e.target.value) }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -159,8 +161,8 @@ const RoleInfoTable = ({features, permissions, existingInfoForEdit ,input, saveb
             placeholder='Role Name'
             variant="outlined"
             sx={{ marginBottom: 2, width: '43%', }}
-          />}
-  
+            />
+            }
       <StyledTable>
         <TableHead>
             {renderFeatureSideBarFeaturesList()}
@@ -169,6 +171,7 @@ const RoleInfoTable = ({features, permissions, existingInfoForEdit ,input, saveb
             
             {renderFeatures()}
         </TableBody>
+      
       </StyledTable>
     </StyledTableContainer>
   
